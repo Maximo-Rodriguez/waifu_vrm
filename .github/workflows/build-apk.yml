@@ -38,3 +38,4 @@ jobs:
           files: dist/app-debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
