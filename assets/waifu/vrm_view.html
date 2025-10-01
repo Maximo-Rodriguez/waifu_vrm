@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Waifu VRM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}#c{width:100vw;height:100vh;display:block}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.159.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://unpkg.com/three-vrm@2.0.7/dist/three-vrm.js"></script>
+<script>
+let scene,camera,renderer,clock,vrm=null,talking=false,mv=0,md=1;
+init();loadVRM();
+function init(){const cv=document.getElementById('c');renderer=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:true});renderer.setPixelRatio(window.devicePixelRatio);renderer.setSize(innerWidth,innerHeight);
+scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(30,innerWidth/innerHeight,0.1,100);camera.position.set(0,1.4,1.2);
+const l=new THREE.DirectionalLight(0xffffff,1);l.position.set(1,1,1);scene.add(l);scene.add(new THREE.AmbientLight(0xffffff,0.6));
+clock=new THREE.Clock();addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});animate();}
+function loadVRM(){const URL='https://appassets.androidplatform.net/assets/assets/waifu/model.vrm';
+const L=new THREE.GLTFLoader();L.crossOrigin='anonymous';L.load(URL,(gltf)=>{THREE.VRMUtils.removeUnnecessaryJoints(gltf.scene);THREE.VRM.from(gltf).then(v=>{vrm=v;scene.add(vrm.scene);vrm.scene.rotation.y=Math.PI;});},undefined,(e)=>console.error('VRM error',e));}
+function animate(){requestAnimationFrame(animate);const dt=clock.getDelta(); if(vrm){vrm.update(dt);const em=vrm.expressionManager;if(em){if(talking){mv+=md*dt*2.2;if(mv>0.8){mv=0.8;md=-1}if(mv<0.1){mv=0.1;md=1}em.setValue('aa',mv);}else{mv*=0.85;em.setValue('aa',mv);}}}renderer.render(scene,camera);}
+window.waifu={startTalking:()=>{talking=true;},stopTalking:()=>{talking=false;},setMood:(n)=>{if(!vrm)return;try{vrm.expressionManager?.setValue(n,0.8);}catch(e){} setTimeout(()=>{try{vrm.expressionManager?.setValue(n,0.0);}catch(e){}},1200);}};
+</script>
+</body>
+</html>
+
+
+
