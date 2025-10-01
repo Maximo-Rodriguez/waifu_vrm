@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace "com.example.waifu_vrm" // Cambiá por tu namespace si querés
+    namespace "com.example.waifu_vrm"  // Cambialo si querés tu propio ID
     compileSdkVersion 34
 
     defaultConfig {
-        applicationId "com.example.waifu_vrm" // Cambiá si querés tu propio ID
+        applicationId "com.example.waifu_vrm"
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 1
@@ -27,7 +27,6 @@ android {
 
     buildTypes {
         release {
-            // Para compilar sin keystore propio, usamos el debug
             signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
@@ -50,4 +49,5 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.25"
 }
+
 
